@@ -2,7 +2,7 @@
 library(tidyverse)
 library(purrr)
 
-
+setwd("D:/Behavioral-Risk-Factors/temp1")
 brf17 <- readRDS("brf17")
 brf17$year = "2017"
 #glimpse(brf17)
@@ -560,6 +560,24 @@ rm(brf_alla)
 rm(names89)
 rm(names_all)
 rm(names_both)
+brf_all_from89 <- brf_all
+
+#*************************************************
+#*************************************************
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
