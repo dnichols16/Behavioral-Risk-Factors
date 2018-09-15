@@ -1,0 +1,83 @@
+---
+title: "BRFSS Exploration"
+author: "David P Nichols, MD, MPH"
+date: "September 15, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+"The Behavioral Risk Factor Surveillance System (BRFSS) is the nation's premier system of health-related telephone surveys that collect state data about U.S. residents regarding their health-related risk behaviors, chronic health conditions, and use of preventive services. Established in 1984 with 15 states, BRFSS now collects data in all 50 states as well as the District of Columbia and three U.S. territories. BRFSS completes more than 400,000 adult interviews each year, making it the largest continuously conducted health survey system in the world." <br>
+[BRFSS Web site](https://www.cdc.gov/brfss/index.html) <br>
+It contains telephone survey data on many health issues including general health, smoking, alcohol use, physical activity, chronic diseases and many others. It started in the 1980's with a small question base which has greatly expanded since that time. <br>
+It provides a vast opportunity to explore subject-level   health attitudes and disease data over time. For the data scientist, it provides a rich field of interesting potential research questions and data mining gymnastics.<br>
+
+I started my exploration by perusing the [2017 Codebook](https://www.cdc.gov/brfss/annual_data/2017/pdf/codebook17_llcp-508.pdf), picking out those variables that looked interesting, in my opinion, to follow over time. I downloaded all the yearly survey files from the [download site](https://www.cdc.gov/brfss/annual_data/annual_2017.html) going back to 1989 and saved each one as an RDS file. 
+
+```{r, message = FALSE}
+library(tidyverse)
+library(purrr)
+
+#setwd("Your working directory")
+brf17 <- readRDS("brf17")
+brf17$year = "2017" #add a year label
+```
+
+Since the BRFSS has increased the number of survey questions over time, I started with my list of selected variables (brf17a) and then serially compared this list with each preceeding year's list of variables.
+
+```{r, message = FALSE}
+brf17a <- brf17[ ,c(1,17,18,27,28,29,30,31,32,
+                   33,34,35,36,37,38,39,40,41,
+                   42,43,44,45,46,47,48,49,50,
+                   51,52,53,54,55,58,59,60,61,
+                   66,67,68,69,70,71,72,73,74,
+                   75,76,79,79,80,81,82,83,84,
+                   85,86,87,88,89,96,97,99,104,
+                   105,107,108,111,114,115,116,
+                   117,118,121,122,123,124,125,
+                   127,130,132,133,134,135,143,
+                   144,149,150,151,152,154,155,
+                   157,158,163,165,168,169,172,
+                   173,175,184,185,186,192,200,
+                   202,209,230,231,234,236,240,
+                   242,254,359)]
+```
+
+Get the 2016 file:
+```{r, message = FALSE}
+brf16 <- readRDS("brf16")
+brf16$year = "2016"
+```
+
+The following deserves some explanation. The object is to get the variables from 2017 that appear in 2016. We compare the names(columns) from both and take from 2017 those that match those from 2016 (the intersect function). Then select the actual columns from both and check to see if they are identical (they should be, or you won't be able to bind the two together). 
+```{r, message = FALSE}
+names17a <- names(brf17a)
+names16 <- names(brf16)
+names_both <- dplyr::intersect(names17a, names16)
+brf16a <- brf16 %>% dplyr::select(c(names_both))
+brf17a <- brf17 %>% dplyr::select(c(names_both))
+identical(names(brf17a), names(brf16a))
+```
+
+Now bind the rows from 2017 to those from 2016. 
+```{r, message = FALSE}
+brf_all <- bind_rows(brf17a, brf16a)
+```
+
+```{r, message = FALSE}
+
+```
+
+```{r, message = FALSE}
+
+```
+
+```{r, message = FALSE}
+
+```
+
+```{r, message = FALSE}
+
+```
