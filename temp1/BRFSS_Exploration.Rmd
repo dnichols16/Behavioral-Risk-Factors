@@ -621,47 +621,356 @@ rm(names_both)
 brf_all_from89 <- brf_all
 ```
 
+Let's ask the question: Has the proportion of smokers to non-smokers changed over time? We have 30 years of self-reported data answering the BFRSS survey question "Have you smoked at least 100 cigarettes in your entire life?". We can assume that this question will give us some insight into the answer to our research question. smok is our compilation of BFRSS data from 1989 to 2017.
+
 ```{r, message = FALSE}
 glimpse(brf_all_from89)
 smok <- brf_all_from89 
 ```
 
+
+
 ```{r, message = FALSE, fig.width = 5, fig.height = 4}
-colnames(smok) <- tolower(colnames(smok))
+colnames(smok) <- tolower(colnames(smok)) #less typing
+#filter out only observations answering the smoking question
 smok1 <- smok %>%
   filter(smoke100 == 2 | smoke100 == 1)
+#get a count of smokers in each year of the survey
 smokers <- smok1 %>% 
   group_by(year) %>% 
   count(smoke100)
+#get the data in a better form for plotting
 smokers_wide <- smokers %>% 
   spread(smoke100, n) %>% 
   rename(smokers = "1", non_smokers = "2") %>% 
+  #proportion of smokers
   mutate(smok_prop = smokers/(smokers + non_smokers))
 
 ggplot(smokers_wide) +
-  geom_line(aes(x = as.numeric(year), y = smok_prop)) +
+  geom_line(aes(x = as.numeric(year), y = smok_prop), color = "blue") +
   labs(x = "Year", y = "Smokers/Non-Smokers",
     title = "Proportion of Smokers to Non-Smokers",
     subtitle = "Have you smoked at least 100 cigarettes in your entire life?",
     caption = "Behavioral Risk Factor Surveillance System")
   
 ```
-There is a definite trend over the last 30 years to decrease the proportion of smokers to non-smokers.
+
+There is a definite trend over the last 30 years to decrease the proportion of smokers to non-smokers.<br>
+
+We can ask other questions relating to other health subjects from the BRFSS surveys. This time we'll look at data from 2007 through 2017 asking questions about diabetes. I will get the data from these years and again will hide the coding to save space on the blog post.
+
+```{r, message = FALSE, results = "hide", echo = FALSE}
+rm(brf_all)
+brf17 <- readRDS("brf17")
+brf17$year = "2017"
+
+brf17a <- brf17[ ,c(1,17,18,27,28,29,30,31,32,
+                   33,34,35,36,37,38,39,40,41,
+                   42,43,44,45,46,47,48,49,50,
+                   51,52,53,54,55,58,59,60,61,
+                   66,67,68,69,70,71,72,73,74,
+                   75,76,79,79,80,81,82,83,84,
+                   85,86,87,88,89,96,97,99,104,
+                   105,107,108,111,114,115,116,
+                   117,118,121,122,123,124,125,
+                   127,130,132,133,134,135,143,
+                   144,149,150,151,152,154,155,
+                   157,158,163,165,168,169,172,
+                   173,175,184,185,186,192,200,
+                   202,209,230,231,234,236,240,
+                   242,254,359)]
+brf16 <- readRDS("brf16")
+brf16$year = "2016"
+
+names17a <- names(brf17a)
+names16 <- names(brf16)
+names_both <- dplyr::intersect(names17a, names16)
+brf16a <- brf16 %>% dplyr::select(c(names_both))
+brf17a <- brf17 %>% dplyr::select(c(names_both))
+identical(names(brf17a), names(brf16a))
+brf_all <- bind_rows(brf17a, brf16a)
+
+rm(brf17)
+rm(brf17a)
+rm(brf16)
+rm(brf16a)
+rm(names16)
+rm(names17a)
+rm(names_both)
+
+#**********************************************
+brf15 <- readRDS("brf15")
+brf15$year = "2015"
+
+names_all <- names(brf_all)
+names15 <- names(brf15)
+names_both <- dplyr::intersect(names_all, names15)
+brf15a <- brf15 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf15a))
+brf_all <- bind_rows(brf_alla, brf15a)
+
+rm(brf15)
+rm(brf15a)
+rm(brf_alla)
+rm(names15)
+rm(names_all)
+rm(names_both)
+#*************************************************
+brf14 <- readRDS("brf14")  
+brf14$year = "2014"
+
+names_all <- names(brf_all)
+names14 <- names(brf14)
+names_both <- dplyr::intersect(names_all, names14)
+brf14a <- brf14 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf14a))
+brf_all <- bind_rows(brf_alla, brf14a)
+
+rm(brf14)
+rm(brf14a)
+rm(brf_alla)
+rm(names14)
+rm(names_all)
+rm(names_both)
+#**********************************************
+brf13 <- readRDS("brf13")  
+brf13$year = "2013"
+
+names_all <- names(brf_all)
+names13 <- names(brf13)
+names_both <- dplyr::intersect(names_all, names13)
+brf13a <- brf13 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf13a))
+brf_all <- bind_rows(brf_alla, brf13a)
+
+rm(brf13)
+rm(brf13a)
+rm(brf_alla)
+rm(names13)
+rm(names_all)
+rm(names_both)
+#*********************************************
+brf12 <- readRDS("brf12")  
+brf12$year = "2012"
+
+names_all <- names(brf_all)
+names12 <- names(brf12)
+names_both <- dplyr::intersect(names_all, names12)
+brf12a <- brf12 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf12a))
+brf_all <- bind_rows(brf_alla, brf12a)
+
+rm(brf12)
+rm(brf12a)
+rm(brf_alla)
+rm(names12)
+rm(names_all)
+rm(names_both)
+#************************************************
+brf11 <- readRDS("brf11")  
+brf11$year = "2011"
+
+names_all <- names(brf_all)
+names11 <- names(brf11)
+names_both <- dplyr::intersect(names_all, names11)
+brf11a <- brf11 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf11a))
+brf_all <- bind_rows(brf_alla, brf11a)
+
+rm(brf11)
+rm(brf11a)
+rm(brf_alla)
+rm(names11)
+rm(names_all)
+rm(names_both)
+#***********************************************
+brf10 <- readRDS("brf10")  
+brf10$year = "2010"
+
+names_all <- names(brf_all)
+names10 <- names(brf10)
+names_both <- dplyr::intersect(names_all, names10)
+brf10a <- brf10 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf10a))
+brf_all <- bind_rows(brf_alla, brf10a)
+
+rm(brf10)
+rm(brf10a)
+rm(brf_alla)
+rm(names10)
+rm(names_all)
+rm(names_both)
+#**********************************************
+brf09 <- readRDS("brf09")  
+brf09$year = "2009"
+
+names_all <- names(brf_all)
+names09 <- names(brf09)
+names_both <- dplyr::intersect(names_all, names09)
+brf09a <- brf09 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf09a))
+brf_all <- bind_rows(brf_alla, brf09a)
+
+rm(brf09)
+rm(brf09a)
+rm(brf_alla)
+rm(names09)
+rm(names_all)
+rm(names_both)
+#**********************************************
+brf08 <- readRDS("brf08")  
+brf08$year = "2008"
+
+names_all <- names(brf_all)
+names08 <- names(brf08)
+names_both <- dplyr::intersect(names_all, names08)
+brf08a <- brf08 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf08a))
+brf_all <- bind_rows(brf_alla, brf08a)
+
+rm(brf08)
+rm(brf08a)
+rm(brf_alla)
+rm(names08)
+rm(names_all)
+rm(names_both)
+#***********************************************
+brf07 <- readRDS("brf07")  
+brf07$year = "2007"
+
+names_all <- names(brf_all)
+names07 <- names(brf07)
+names_both <- dplyr::intersect(names_all, names07)
+brf07a <- brf07 %>% dplyr::select(c(names_both))
+brf_alla <- brf_all %>% dplyr::select(c(names_both))
+identical(names(brf_alla), names(brf07a))
+brf_all <- bind_rows(brf_alla, brf07a)
+
+rm(brf07)
+rm(brf07a)
+rm(brf_alla)
+rm(names07)
+rm(names_all)
+rm(names_both)
+```
+
+```{r, message = FALSE}
+diab <- brf_all
+colnames(diab) <- tolower(colnames(diab))
+diab1 <- diab %>%
+  select(poorhlth, diabage2, sex, weight2,
+         height3, insulin, bldsugar, feetchk2,
+         doctdiab, chkhemo3, diabeye, diabedu,
+         year)
+```
+
+```{r, message = FALSE}
+#change 9999 and 7777 to NA
+diab1$height3 <- ifelse(diab1$height3 == 9999 |
+                          diab1$height3 == 7777 |
+                          diab$height3 >= 706, #nobody over 7 feet, 6 in tall
+                           NA, diab1$height3)
+```
+
+```{r, message = FALSE}
+#check to see if any more excessive numbers
+diab1 %>% 
+  select(height3) %>% 
+  count(height3 >= 706)
+diab1 <- diab1 %>% mutate(height3 = as.character(height3))
+```
+
+```{r, message = FALSE}
+#function to convert weight3 to inches(then to meters for BMI
+to_inches <- function(x) {
+  ft <- str_split_fixed(x, "\\d\\d$", n = 2)
+  ft <- as.numeric(ft[1,1])
+  inch <- str_split_fixed(x, "^\\d", n = 2)
+  inches <- as.numeric(ft)*12 + as.numeric(inch)
+  inches <- inches[[2]]
+  return(inches)
+}
+```
+
+```{r, message = FALSE}
+diab1 <- diab1 %>% 
+  mutate(inches = map_dbl(height3, to_inches))
+```
+
+```{r, message = FALSE}
+#random impute height3 NA's
+mn <- mean(diab1$inches, na.rm = TRUE)
+sdev <- sd(diab1$inches, na.rm = TRUE)
+sum(is.na(diab1$inches))
+diab1 <- diab1 %>% #impute
+  mutate(inches = if_else(is.na(diab1$inches),
+                          rnorm(1, mn, sdev), 
+                          diab1$inches))
+sum(is.na(diab1$inches))
+```
+
+```{r, message = FALSE}
+#change 9999 and 7777 to NA in weight2
+diab1$weight2 <- ifelse(diab1$weight2 == 9999 |
+                          diab1$weight2 == 7777 |
+                          diab$weight2 >= 350, 
+                        NA, diab1$weight2)
+```
+
+```{r, message = FALSE}
+diab1 %>% 
+  select(weight2) %>% 
+  count(weight2 >= 350)
+```
+
+```{r, message = FALSE, warning = FALSE, fig.width = 5, fig.height = 4}
+ggplot(diab1) + #check the shape
+  geom_density(aes(x = weight2)) 
+  xlim(50, 80)
+```
+
+```{r, message = FALSE}
+mn <- mean(diab1$weight2, na.rm = TRUE)
+sdev <- sd(diab1$weight2, na.rm = TRUE)
+sum(is.na(diab1$weight2))
+diab1 <- diab1 %>% #impute
+  mutate(weight2 = if_else(is.na(diab1$weight2),
+                            rnorm(1, mn, sdev), 
+                            diab1$weight2))
+sum(is.na(diab1$weight2))
+
+```
+
+```{r, message = FALSE, warning = FALSE, fig.width = 5, fig.height = 4}
+#function to convert ht, wt to bmi
+to_bmi  <- function(wt, ht) {
+  bmi <- (wt/ht^2) * 703
+}
+#calculate bmi
+diab1 <- diab1 %>%
+  mutate(bmi = to_bmi(weight2, inches))
+
+ggplot(diab1) + #check the shape
+  geom_density(aes(x = bmi)) +
+  xlim(0, 60)
+```
+
 ```{r, message = FALSE}
 
 ```
+
 ```{r, message = FALSE}
 
 ```
-```{r, message = FALSE}
 
-```
-```{r, message = FALSE}
-
-```
-```{r, message = FALSE}
-
-```
 ```{r, message = FALSE}
 
 ```
